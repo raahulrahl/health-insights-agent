@@ -1,0 +1,321 @@
+id: health-insights-v1
+name: health-insights
+version: 1.0.0
+author: paras@getbindu.com
+
+# Description
+description: |
+  HIA (Health Insights Agent) performs comprehensive medical report analysis and health insights 
+  using advanced AI capabilities. Specializes in blood report analysis, health indicator extraction, 
+  risk assessment, and personalized health recommendations.
+
+# Tags and Modes
+tags:
+  - health-insights
+  - medical-analysis
+  - blood-report-analysis
+  - health-assessment
+  - medical-ai
+  - risk-evaluation
+  - preventive-care
+
+input_modes:
+  - text/plain
+  - application/json
+
+output_modes:
+  - text/plain
+  - application/json
+  - text/markdown
+
+# Example Queries
+examples:
+  - "Analyze my blood report and tell me about my health"
+  - "Extract health indicators from this medical report text"
+  - "What are the abnormalities in my blood test results?"
+  - "Assess my health risks based on these lab values"
+  - "Provide recommendations based on my medical report"
+  - "Is my hemoglobin level normal? Here's my report..."
+  - "Evaluate my liver function tests and provide insights"
+
+# Detailed Capabilities
+capabilities_detail:
+  primary_capability:
+    supported: true
+    description: "Comprehensive medical report analysis with health insights and risk assessment"
+    features:
+      - "Blood report text extraction and validation"
+      - "Health indicator identification and extraction"
+      - "Reference range comparison and abnormality detection"
+      - "Multi-system health analysis (CBC, liver, kidney, metabolic, thyroid)"
+      - "Risk assessment based on age, gender, and medical findings"
+      - "Personalized health recommendations and lifestyle guidance"
+      - "Medical disclaimer integration for responsible AI"
+    limitations: "Analysis is for informational purposes only and not a substitute for professional medical advice"
+
+  secondary_capability:
+    supported: true
+    description: "Health monitoring and preventive care insights"
+    features:
+      - "Trend analysis for repeated measurements"
+      - "Preventive health screening recommendations"
+      - "Lifestyle modification guidance"
+      - "Follow-up testing suggestions"
+
+# Requirements
+requirements:
+  packages:
+    - "pdfplumber>=0.11.5"
+    - "pandas>=2.0.0"
+    - "agno>=0.1.0"
+    - "langchain>=0.3.0"
+  system:
+    - "Python 3.12+"
+  min_memory_mb: 512
+
+# Performance Metrics
+performance:
+  avg_processing_time_ms: 2000
+  max_concurrent_requests: 5
+  memory_per_request_mb: 256
+  scalability: horizontal
+
+# Tool Restrictions
+allowed_tools:
+  - Read
+  - Write
+  - Execute
+
+# Rich Documentation
+documentation:
+  overview: |
+    HIA (Health Insights Agent) is a specialized AI system for analyzing medical reports, 
+    particularly blood tests and laboratory results. The agent uses advanced natural language 
+    processing to extract relevant health indicators, compare them against medical reference ranges, 
+    and provide comprehensive health insights.
+
+    Key capabilities include:
+    - Extraction of health indicators from unstructured medical text
+    - Clinical interpretation of abnormal values
+    - Multi-system health assessment
+    - Risk stratification and preventive care recommendations
+    - Age and gender-specific analysis
+
+    The system is designed to complement professional medical care by providing 
+    preliminary analysis and health education, while always including appropriate 
+    medical disclaimers.
+
+  use_cases:
+    when_to_use:
+      - "Analyzing blood test reports and laboratory results"
+      - "Extracting health indicators from medical documents"
+      - "Understanding abnormal lab values in context"
+      - "Getting preliminary health insights before doctor visits"
+      - "Monitoring health trends over time"
+      - "Educational purposes for understanding medical reports"
+
+    when_not_to_use:
+      - "Emergency medical situations - call emergency services"
+      - "Replacing professional medical diagnosis or treatment"
+      - "Making critical health decisions without doctor consultation"
+      - "Analyzing complex medical imaging or specialized tests"
+      - "Pediatric patients (reference ranges differ significantly)"
+
+  input_structure: |
+    The skill accepts medical report text in various formats:
+
+    Simple text input:
+    "Blood test report showing Hemoglobin: 13.5 g/dL, Glucose: 95 mg/dL..."
+
+    Structured input:
+    {
+      "report_text": "Complete medical report text...",
+      "patient_age": 35,
+      "patient_gender": "female",
+      "analysis_type": "comprehensive"
+    }
+
+    Constraints:
+    - Minimum 50 characters of medical text
+    - Must contain medical terminology
+    - Optional patient demographics for improved analysis
+    - PDF content should be extracted to text first
+
+  output_format: |
+    Comprehensive health analysis report in structured format:
+
+    Success Response:
+    {
+      "success": true,
+      "analysis": {
+        "patient_summary": {
+          "age": 35,
+          "gender": "female",
+          "overall_status": "mildly_abnormal"
+        },
+        "extracted_indicators": {
+          "hemoglobin": {"value": 13.5, "unit": "g/dL", "status": "normal"},
+          "glucose": {"value": 95, "unit": "mg/dL", "status": "normal"}
+        },
+        "abnormalities": [
+          {
+            "indicator": "cholesterol",
+            "value": 210,
+            "unit": "mg/dL",
+            "status": "high",
+            "significance": "Moderate cardiovascular risk"
+          }
+        ],
+        "health_insights": {
+          "system_analysis": {
+            "blood_count": {"status": "normal"},
+            "metabolic": {"status": "abnormal", "findings": [...]}
+          },
+          "risk_assessment": {
+            "level": "moderate",
+            "factors": ["cardiovascular_risk"]
+          }
+        },
+        "recommendations": [
+          "Reduce dietary saturated fats",
+          "Increase physical activity",
+          "Follow-up with healthcare provider in 3 months"
+        ]
+      },
+      "disclaimer": "This analysis is for informational purposes only..."
+    }
+
+    Error Response:
+    {
+      "success": false,
+      "error": {
+        "code": "INVALID_MEDICAL_CONTENT",
+        "message": "Provided text does not appear to be a valid medical report"
+      }
+    }
+
+  error_handling:
+    - "Invalid medical content: Returns error with specific reason"
+    - "Missing health indicators: Provides partial analysis with limitations"
+    - "Incomplete patient data: Proceeds with available information"
+    - "Timeout behavior: Returns partial results within 30 seconds"
+    - "Validation errors: Clear feedback on required input format"
+
+  examples:
+    - title: "Normal Blood Report Analysis"
+      input:
+        report_text: "Complete Blood Count: Hemoglobin 13.5 g/dL, WBC 7,500 /µL, RBC 4.8 M/µL, Platelets 250,000 /µL. Metabolic Panel: Glucose 95 mg/dL, Creatinine 0.9 mg/dL."
+        patient_age: 30
+        patient_gender: "male"
+      output:
+        success: true
+        analysis:
+          patient_summary:
+            overall_status: "normal"
+          extracted_indicators:
+            hemoglobin: {value: 13.5, unit: "g/dL", status: "normal"}
+            glucose: {value: 95, unit: "mg/dL", status: "normal"}
+          abnormalities: []
+          recommendations: ["Maintain current healthy lifestyle"]
+
+    - title: "Abnormal Cholesterol Analysis"
+      input:
+        report_text: "Lipid Panel: Total Cholesterol 210 mg/dL, HDL 45 mg/dL, LDL 130 mg/dL, Triglycerides 180 mg/dL"
+        patient_age: 45
+        patient_gender: "female"
+      output:
+        success: true
+        analysis:
+          patient_summary:
+            overall_status: "requires_attention"
+          abnormalities:
+            - indicator: "cholesterol"
+              value: 210
+              unit: "mg/dL"
+              status: "high"
+          recommendations: ["Adopt heart-healthy diet", "Consider cholesterol-lowering medication"]
+
+  best_practices:
+    for_developers:
+      - "Always include medical disclaimers in analysis results"
+      - "Validate medical content before processing"
+      - "Use evidence-based reference ranges for different demographics"
+      - "Implement proper error handling for medical data"
+      - "Ensure patient data privacy and HIPAA compliance considerations"
+
+    for_orchestrators:
+      - "Route medical text analysis requests to this skill"
+      - "Chain with general health advice skills for comprehensive guidance"
+      - "Monitor for emergency indicators and route appropriately"
+      - "Implement rate limiting for resource-intensive analysis"
+      - "Cache reference data for improved performance"
+
+  installation: |
+    HIA Health Insights Agent installation:
+
+    Required packages:
+    pip install pdfplumber pandas agno langchain
+
+    Environment setup:
+    export OPENROUTER_API_KEY="your_openrouter_key"
+    export MEM0_API_KEY="your_mem0_key"
+
+    Optional dependencies:
+    # For enhanced PDF processing
+    pip install pytesseract
+
+    # For advanced statistical analysis
+    pip install scipy scikit-learn
+
+  versioning:
+    - version: "1.0.0"
+      date: "2025-03-10"
+      changes: "Initial release with core medical analysis capabilities"
+    - version: "1.1.0"
+      status: "planned"
+      changes: "Enhanced trend analysis and medication interaction insights"
+
+# Assessment fields for skill negotiation
+assessment:
+  keywords:
+    - "medical report analysis"
+    - "blood test interpretation"
+    - "health indicators"
+    - "laboratory results"
+    - "medical AI"
+    - "health assessment"
+    - "risk evaluation"
+    - "preventive care"
+    - "clinical analysis"
+    - "medical insights"
+
+  specializations:
+    - domain: "medical_analysis"
+      confidence_boost: 0.4
+    - domain: "healthcare"
+      confidence_boost: 0.3
+    - domain: "preventive_medicine"
+      confidence_boost: 0.3
+    - domain: "laboratory_medicine"
+      confidence_boost: 0.4
+
+  anti_patterns:
+    - "Emergency medical diagnosis - route to emergency services"
+    - "Prescription medication recommendations"
+    - "Medical imaging analysis"
+    - "Surgical decision support"
+    - "Pediatric medical analysis"
+
+  complexity_indicators:
+    simple:
+      - "Single indicator analysis"
+      - "Normal range verification"
+      - "Basic health question"
+    medium:
+      - "Complete blood count analysis"
+      - "Multi-system evaluation"
+      - "Risk assessment"
+    complex:
+      - "Comprehensive medical report analysis"
+      - "Multiple abnormality correlation"
+      - "Age and gender-specific interpretation"

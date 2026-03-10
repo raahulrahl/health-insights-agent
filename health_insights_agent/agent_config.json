@@ -1,0 +1,40 @@
+{
+    "author": "paras@getbindu.com",
+    "name": "health-insights-agent",
+    "description": "HIA is a sophisticated AI-powered health insights agent designed specifically for analyzing blood reports and providing medical insights using comprehensive medical analysis tools.",
+    "version": "1.0.0",
+    "recreate_keys": false,
+    
+    "skills": [
+        "skills/health-insights"
+    ],
+    
+    "capabilities": {
+    },
+    
+
+    "agent_trust": "low",
+    "debug_mode": true,
+    "debug_level": 2,
+    
+    "deployment": {
+        "url": "http://0.0.0.0:3773",
+        "expose": true,
+        "protocol_version": "1.0.0",
+        "proxy_urls": ["0.0.0.0"],
+        "cors_origins": ["*"]
+    },
+    "num_history_sessions": 5,
+    "environment_variables": [
+      {
+        "key": "OPENROUTER_API_KEY",
+        "description": "OpenRouter API key for LLM calls",
+        "required": true
+      },
+      {
+        "key": "MEM0_API_KEY",
+        "description": "Mem0 API key for memory operations",
+        "required": true
+      }
+    ]
+  }
